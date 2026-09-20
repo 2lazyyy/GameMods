@@ -1,0 +1,6 @@
+.vs/
+bin/
+obj/
+[Bb]uild/
+*.user
+*.suo
