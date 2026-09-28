@@ -21,15 +21,6 @@ namespace ShadeFinderMod
             new Harmony("com.2lazy.ShadowLocation").PatchAll();
         }
 
-        private void RemoveMarker()
-        {
-            if (marker != null)
-            {
-                Destroy(marker);
-                marker = null;
-            }
-        }
-
         [HarmonyPatch(typeof(PlayerData), "GetBool")]
         private static class CompassLocationPatch
         {
@@ -119,21 +110,17 @@ namespace ShadeFinderMod
                 );
 
             string sceneName = PlayerData.instance.shadeScene;
-            bool hasActiveShade =
-                !string.IsNullOrEmpty(sceneName) && sceneName != "None";
+            bool hasActiveShade = !string.IsNullOrEmpty(sceneName) && sceneName != "None";
             string shadeZone = PlayerData.instance.shadeMapZone;
             string mapBoolName = GetMapBoolName(playerZone.ToString());
             bool hasMap = mapBoolName != null && PlayerData.instance.GetBool(mapBoolName);
 
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                Logger.LogInfo(
-                    $"Shade zone: {shadeZone}, Player zone: {playerZone}, Has map: {hasMap}, Active shade: {hasActiveShade}"
-                );
+                Logger.LogInfo( $"Shade zone: {shadeZone}, Player zone: {playerZone}, Has map: {hasMap}, Active shade: {hasActiveShade}" );
             }
 
-            bool shouldShowCompass =
-                hasActiveShade && shadeZone == playerZone.ToString() && !hasMap;
+            bool shouldShowCompass = hasActiveShade && shadeZone == playerZone.ToString() && !hasMap;
 
             UpdateCompassOverride(PlayerData.instance, shouldShowCompass);
 
@@ -141,12 +128,6 @@ namespace ShadeFinderMod
             {
                 forceMapDisplay = true;
                 forceMapBoolName = mapBoolName;
-            }
-
-            if (string.IsNullOrEmpty(sceneName) || sceneName == "None")
-            {
-                RemoveMarker();
-                return;
             }
 
             // Create marker once
